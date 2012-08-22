@@ -33,7 +33,7 @@
 -(IBAction)pollTwitter:(NSString *)url
 {
     NSString *request_query = url;
-    [self.fliteEngine speakText:[[NSString alloc] initWithFormat:@"Polling URL: %@", url]];
+    // [self.fliteEngine speakText:[[NSString alloc] initWithFormat:@"Polling URL: %@", url]];
     // Do a simple search, using the Twitter API
     TWRequest *request = [[TWRequest alloc] initWithURL:[NSURL URLWithString: request_query] 
                                              parameters:nil requestMethod:TWRequestMethodGET];
@@ -45,11 +45,15 @@
          {
              // The response from Twitter is in JSON format
              // Move the response into a dictionary and print
-             NSError *error;        
-             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-             NSString* cont = [[NSString alloc] initWithFormat:@"%@", dict];
-             [self.fliteEngine speakText:cont];
-             NSLog(@"Twitter response: %@", dict);                           
+             NSError *error;
+             NSArray *dict = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+             // NSString* cont = [[NSString alloc] initWithFormat:@"%@", dict];
+             // [self.fliteEngine speakText:cont];
+
+             // NSLog(@"Twitter response: %@", dict);
+           
+             NSDictionary *mostRecentTweet = [dict objectAtIndex:0];
+             NSLog(@"Most recent tweet id: %@ text: %@", [mostRecentTweet objectForKey:@"id"], [mostRecentTweet objectForKey:@"text"]);
          }
          else
              NSLog(@"Twitter error, HTTP response: %i", [urlResponse statusCode]);
@@ -66,7 +70,7 @@
   // never returns
   
   NSLog(@"hello world");
-  [self.fliteEngine speakText:@"Hello World"];
+  // [self.fliteEngine speakText:@"Hello World"];
   [self pollTwitter:DEFAULT_URL];
 //  NSString *s2 = SEARCH_URL;
 }
